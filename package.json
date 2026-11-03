@@ -1,0 +1,23 @@
+{
+  "name": "talk-se2",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "build": "tsc --noEmit && vite build --config deck/vite.config.ts && node scripts/verify-static.mjs",
+    "preview": "vite preview --config deck/vite.config.ts",
+    "test": "node --test tests/*.test.mjs && playwright test",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": { "react": "19.3.0", "react-dom": "19.3.0" },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.64.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "typescript": "6.0.3",
+    "vite": "8.3.5",
+    "wrangler": "4.154.0"
+  }
+}
