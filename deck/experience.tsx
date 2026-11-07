@@ -40,8 +40,35 @@ function Demo({ language }: { language: string }) {
 export function TestEvidence({ language }: { language: 'es' | 'en' }) {
   const en = language === 'en'
   const steps = en ? ['Accepted rule', 'Given / When / Then', 'Executable E2E test', 'Evidence'] : ['Regla aceptada', 'Given / When / Then', 'Test E2E ejecutable', 'Evidencia']
-  const example = en ? '@BR-REFUND-001\nScenario: Within the window\n  Given an order delivered 29 days ago\n  When the customer requests a refund\n  Then the refund is accepted' : '@BR-REFUND-001\nScenario: Dentro de plazo\n  Given un pedido entregado hace 29 días\n  When el cliente pide la devolución\n  Then se acepta'
-  return <div className="testing-trace"><ol aria-label={en ? 'From product rule to test evidence' : 'De la regla de producto a la evidencia del test'}>{steps.map((step, i) => <li key={step}><span>{String(i + 1).padStart(2, '0')}</span><strong>{step}</strong></li>)}</ol><details><summary>{en ? 'See the scenario' : 'Ver el escenario'}</summary><Code label={en ? 'Refund scenario' : 'Escenario de devolución'}>{example}</Code></details></div>
+  const details = en ? [
+    'BR-REFUND-001 · Refunds are accepted within 30 days of delivery.',
+    'An example of accepted behaviour, linked to the rule.',
+    'The scenario becomes an executable end-to-end check.',
+    'CI records pass or fail against the accepted behaviour.',
+  ] : [
+    'BR-REFUND-001 · Se aceptan devoluciones hasta 30 días después de la entrega.',
+    'Un ejemplo de comportamiento aceptado, vinculado a la regla.',
+    'El escenario se convierte en una comprobación e2e ejecutable.',
+    'CI registra si el comportamiento aceptado se cumple o falla.',
+  ]
+  const scenario = en ? ['An order was delivered 29 days ago', 'The customer requests a refund', 'The refund is accepted'] : ['Un pedido se entregó hace 29 días', 'El cliente pide la devolución', 'La devolución se acepta']
+  return <div className="testing-trace"><ol aria-label={en ? 'From product rule to test evidence' : 'De la regla de producto a la evidencia del test'}>{steps.map((step, i) => <li key={step} className={`trace-step trace-step-${i}`} tabIndex={0} aria-label={`${step}. ${details[i]}`}><span>{String(i + 1).padStart(2, '0')}</span><strong>{step}</strong>{i === 0 && <small>BR-REFUND-001<br />30 {en ? 'days from delivery' : 'días desde la entrega'}</small>}{i === 1 && <><small>SB-REFUND-001 · {en ? 'product definition' : 'definición de producto'}</small><div className="trace-scenario">{scenario.map((line, j) => <p key={line}><b>{['Given', 'When', 'Then'][j]}</b>{line}</p>)}</div></>}{i === 2 && <small>tests/e2e/refund-window.feature<br />{en ? 'cites' : 'cita'} SB-REFUND-001</small>}{i === 3 && <small>{en ? 'Passed / failed in CI' : 'Pasa / falla en CI'}</small>}<em className="trace-tooltip" role="tooltip">{details[i]}</em></li>)}</ol><p className="trace-conclusion">{en ? 'The test follows the accepted product definition; its result is evidence, not a new source of truth.' : 'El test sigue la definición aceptada del producto; su resultado es evidencia, no una nueva fuente de verdad.'}</p></div>
+}
+
+export function TestingEvolution({ language }: { language: 'es' | 'en' }) {
+  const en = language === 'en'
+  const levels = en ? [
+    ['E2E', 'Whole user journey', 'Checks that the product works from the user’s point of view. Before: costly to write and especially to maintain.'],
+    ['Integration', 'Components together', 'Checks contracts between modules, services and data. Moderate upkeep.'],
+    ['Unit', 'One small behaviour', 'Checks isolated logic quickly. Cheap to run and maintain.'],
+  ] : [
+    ['E2E', 'Recorrido completo', 'Comprueba el producto desde el punto de vista del usuario. Antes: costoso de escribir y, sobre todo, de mantener.'],
+    ['Integración', 'Piezas conectadas', 'Comprueba contratos entre módulos, servicios y datos. Mantenimiento intermedio.'],
+    ['Unitarios', 'Comportamiento aislado', 'Comprueba lógica pequeña y rápida. Barato de ejecutar y mantener.'],
+  ]
+  return <><div className="scene-grid testing-evolution">
+    {[false, true].map(now => <section key={String(now)}><div><h2>{en ? now ? 'Now' : 'Before' : now ? 'Ahora' : 'Antes'}</h2><p>{en ? now ? 'Accepted product scenarios help AI generate and update E2E tests.' : 'Few E2E tests: expensive to write and keep current.' : now ? 'Los escenarios aceptados del producto ayudan a generar y actualizar los e2e con IA.' : 'Pocos e2e: caros de escribir y de mantener al día.'}</p><small className="test-cost-key">{en ? 'Maintenance effort' : 'Coste de mantenimiento'} <i data-cost="low" aria-hidden="true" /><i data-cost="medium" aria-hidden="true" /><i data-cost="high" aria-hidden="true" /></small></div><div className={`test-shape ${now ? 'after' : 'before'}`} aria-label={en ? now ? 'Testing hourglass' : 'Testing pyramid' : now ? 'Reloj de arena de pruebas' : 'Pirámide de pruebas'}>{levels.map(([label, title, detail], i) => { const explanation = now && i === 0 ? (en ? 'Checks the whole user journey. Accepted scenarios help AI update it when the product changes; it still needs to run.' : 'Comprueba el recorrido completo. Los escenarios aceptados ayudan a la IA a actualizarlo cuando cambia el producto; sigue siendo necesario ejecutarlo.') : detail; return <button key={label} type="button" className="test-band" data-cost={i === 0 ? now ? 'medium' : 'high' : i === 1 ? 'medium' : 'low'} aria-label={`${label}. ${explanation}`}><span className="test-band-light" aria-hidden="true" />{now && i === 0 ? `${label} ${en ? 'from intent' : 'desde la intención'}` : label}<span className="test-band-tooltip" role="tooltip"><svg viewBox="0 0 100 36" aria-hidden="true">{i === 0 ? <><circle cx="12" cy="18" r="7" /><circle cx="50" cy="18" r="7" /><circle cx="88" cy="18" r="7" /><path d="M19 18h24m14 0h24" /></> : i === 1 ? <><rect x="7" y="7" width="25" height="22" /><rect x="68" y="7" width="25" height="22" /><path d="M32 18h36" /></> : <><rect x="35" y="5" width="30" height="26" /><path d="m43 18 5 5 10-12" /></>}</svg><strong>{title}</strong>{explanation}</span></button> })}</div></section>)}
+  </div><p className="testing-conclusion">{en ? 'Unit tests remain the foundation. E2E tests check accepted behaviour; AI helps maintain them, but evidence still comes from running them.' : 'Los unitarios siguen siendo la base. Los e2e comprueban el comportamiento aceptado; la IA ayuda a mantenerlos, pero la evidencia sale de ejecutarlos.'}</p></>
 }
 
 export function Flow({ items, label }: { items: string[]; label: string }) {
@@ -98,7 +125,7 @@ const experience: Experience = { language: 'es', scenes: [
   { id: 'document-architecture-with-arc42', title: 'Documentar arquitectura con arc42', content: <><ol className="architecture-blocks"><li>Introducción y objetivos</li><li>Restricciones</li><li><strong>Contexto y alcance</strong></li><li><strong>Estrategia de solución</strong></li><li><strong>Bloques de construcción</strong></li><li>Vista de ejecución</li><li>Vista de despliegue</li><li><strong>Conceptos transversales</strong></li><li><strong>Decisiones (ADRs)</strong></li><li><em>Requisitos de calidad</em></li><li>Riesgos y deuda técnica</li><li><em>Glosario</em></li></ol><p><strong>Negrita:</strong> lo que el agente consulta en cada cambio. <em>Cursiva:</em> el puente con la definición de producto.</p><Citation href="https://arc42.org/">arc42 · doce bloques</Citation></> },
   { id: 'agentic-flow-end-to-end', title: 'Un flujo agéntico de principio a fin', content: <><Flow label="Ciclo de vida de agentic-sdlc" items={['Backlog', 'Refine → Ready · verifica un agente', 'Propose → Planned · verifica una persona', 'Implement → Done · verifican CI y una persona', 'Integrate', 'Review → vuelve al backlog']} /><p>agentic-sdlc · <a href="https://github.com/juangcarmona/agent-toolkit">github.com/juangcarmona/agent-toolkit</a></p><p>adopt descubre las herramientas del proyecto. done-gate-auditor revisa el diff fuera del contexto de quien lo escribió.</p></> },
   { id: 'from-structured-behaviour-to-tests', title: 'De la regla al test', content: <TestEvidence language="es" /> },
-  { id: 'from-pyramid-to-hourglass', title: 'La evolución del testing', content: <><div className="scene-grid"><section><div><h2>Antes</h2><p>Pocos e2e: caros de crear y mantener.</p></div><div className="test-shape before" aria-label="Pirámide de pruebas"><p>E2E</p><p>Integración</p><p>Unitarios</p></div></section><section><div><h2>Ahora</h2><p>Una definición de producto viva permite generar y mantener los e2e con ayuda de la IA.</p></div><div className="test-shape after" aria-label="Reloj de arena de pruebas"><p>E2E desde la intención</p><p>Integración</p><p>Unitarios</p></div></section></div><p>Los unitarios siguen siendo la base. Los e2e comprueban el comportamiento aceptado.</p></> },
+  { id: 'from-pyramid-to-hourglass', title: 'La evolución del testing', content: <TestingEvolution language="es" /> },
   { id: 'can-we-trust-the-result', title: '¿Podemos fiarnos del resultado?', content: <></> },
   { id: 'controlled-deployment', title: 'Entregar es desplegar con control', content: <></> },
   { id: 'operate-learn-decide-again', title: 'Operar, aprender, volver a decidir', content: <></> },
