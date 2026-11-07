@@ -1,5 +1,5 @@
 import type { Experience } from '../src/experience-model'
-import { Citation, Code, Flow, ProductCycle, TestEvidence, WhatStory, decorateExperience } from './experience'
+import { Citation, Code, Flow, ProductCycle, TestEvidence, TestingEvolution, WhatStory, decorateExperience } from './experience'
 import { LifecycleLoop } from './SceneExtras'
 import Diagram from './Diagrams'
 
@@ -23,7 +23,7 @@ const experience: Experience = { language: 'en', scenes: [
   { id: 'document-architecture-with-arc42', title: 'Document architecture with arc42', content: <><ol className="architecture-blocks"><li>Introduction and goals</li><li>Constraints</li><li><strong>Context and scope</strong></li><li><strong>Solution strategy</strong></li><li><strong>Building blocks</strong></li><li>Runtime view</li><li>Deployment view</li><li><strong>Cross-cutting concepts</strong></li><li><strong>Decisions (ADRs)</strong></li><li><em>Quality requirements</em></li><li>Risks and technical debt</li><li><em>Glossary</em></li></ol><p><strong>Bold:</strong> consulted by the agent on each change. <em>Italic:</em> the bridge to the product definition.</p><Citation href="https://arc42.org/" language="en">arc42 · twelve sections</Citation></> },
   { id: 'agentic-flow-end-to-end', title: 'An agentic flow from end to end', content: <><Flow label="Agentic SDLC lifecycle" items={['Backlog', 'Refine → Ready · agent verification', 'Propose → Planned · human verification', 'Implement → Done · CI and human verification', 'Integrate', 'Review → back to the backlog']} /><p>agentic-sdlc · <a href="https://github.com/juangcarmona/agent-toolkit">github.com/juangcarmona/agent-toolkit</a></p><p>adopt discovers project tools. done-gate-auditor reviews the diff outside the authoring context.</p></> },
   { id: 'from-structured-behaviour-to-tests', title: 'From rule to test', content: <TestEvidence language="en" /> },
-  { id: 'from-pyramid-to-hourglass', title: 'The evolution of testing', content: <><div className="scene-grid"><section><div><h2>Before</h2><p>Few E2E tests: costly to create and maintain.</p></div><div className="test-shape before" aria-label="Testing pyramid"><p>E2E</p><p>Integration</p><p>Unit</p></div></section><section><div><h2>Now</h2><p>A living product definition lets AI help generate and maintain E2E tests.</p></div><div className="test-shape after" aria-label="Testing hourglass"><p>E2E from intent</p><p>Integration</p><p>Unit</p></div></section></div><p>Unit tests remain the foundation. E2E tests check accepted behaviour.</p></> },
+  { id: 'from-pyramid-to-hourglass', title: 'The evolution of testing', content: <TestingEvolution language="en" /> },
   { id: 'can-we-trust-the-result', title: 'Can we trust the result?', content: <></> },
   { id: 'controlled-deployment', title: 'Delivery means controlled deployment', content: <></> },
   { id: 'operate-learn-decide-again', title: 'Operate, learn, decide again', content: <></> },

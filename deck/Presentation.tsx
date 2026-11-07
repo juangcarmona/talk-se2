@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { handlesShortcut, interactiveSelector, nextIndex, sceneIndex } from '../src/scene-navigation'
-import spanish, { chapterForScene, legacySceneIds, presentationImages } from './experience'
+import spanish, { chapterForScene, chapters, legacySceneIds, presentationImages } from './experience'
 import english from './experience-en'
 
 function indexFromHash(scenes: { id: string }[], hash: string) {
@@ -21,6 +22,7 @@ export default function Presentation() {
   const preloadedImages = useRef<HTMLImageElement[]>([])
   const touchStart = useRef<{ x: number; y: number } | null>(null)
   const scene = scenes[index]
+  const chapterIndex = chapters.findIndex(chapter => (chapter.ids as readonly string[]).includes(scene.id))
   const elapsedMinutes = Math.floor(elapsed / 60)
 
   useEffect(() => {
@@ -101,6 +103,7 @@ export default function Presentation() {
     if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.5) move(dx < 0 ? 1 : -1)
   }}>
     <a className="skip-link" href="#scene-title">{language === 'en' ? 'Skip to slide' : 'Ir a la diapositiva'}</a>
+    {index > 1 && index < scenes.length - 1 && <div className="stage-thread" aria-hidden="true">{chapters.map((chapter, position) => <span key={chapter.label[1]} data-current={chapterIndex === position} data-past={chapterIndex < 0 || chapterIndex > position} style={{ '--thread-color': `var(--stage-${chapter.label[1].toLowerCase()})` } as CSSProperties} />)}</div>}
     <article className="scene" key={scene.id} aria-labelledby="scene-title" data-scene={scene.id} data-stage={comparisonStage} data-chapter={chapterForScene(scene.id, 'en')?.toLowerCase()}>
       <h1 id="scene-title" className={scene.id === 'engineering-journey' ? 'visually-hidden' : undefined} ref={heading} tabIndex={-1}>{scene.title}</h1>
       <div className="scene-content">{scene.content}</div>
