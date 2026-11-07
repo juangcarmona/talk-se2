@@ -54,6 +54,21 @@ test('the seven-stage thread follows chapters and citations expand in place', as
   await expect(page.locator('.stage-thread span[data-past="true"]')).toHaveCount(7)
 })
 
+test('SDD framework steps reveal bilingual details on hover and keyboard focus', async ({ page }) => {
+  await page.goto('/#scene=github-spec-kit')
+  const plan = page.getByRole('button', { name: /Plan\. Define el diseño técnico/ })
+  await plan.hover()
+  await expect(plan.getByRole('tooltip')).toHaveText('Define el diseño técnico a partir de la spec.')
+  await expect(plan.getByRole('tooltip')).toBeVisible()
+  await page.mouse.move(0, 0)
+  await plan.focus()
+  await expect(plan.getByRole('tooltip')).toBeVisible()
+  await page.goto('/?lang=en#scene=kiro')
+  const requirements = page.getByRole('button', { name: /Requirements\. Capture testable behaviour/ })
+  await requirements.hover()
+  await expect(requirements.getByRole('tooltip')).toContainText('design-first is also possible')
+})
+
 test('presenter clock waits for the first minute and uses HH:mm', async ({ page }) => {
   await page.clock.install()
   await page.goto('/')

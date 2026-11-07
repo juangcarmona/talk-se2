@@ -104,9 +104,27 @@ export function SddOverview({ language, view = 'general' }: { language: Language
   const framework = { general: null, openspec: 0, 'spec-kit': 1, kiro: 2 }[view]
   const en = language === 'en'
   const frameworks = [
-    { name: 'OpenSpec', image: openspec, href: 'https://github.com/Fission-AI/OpenSpec/blob/main/docs/workflows.md', description: en ? 'A change proposal carries planning artifacts; apply it, then sync and archive the result.' : 'Una propuesta reúne los artefactos del cambio; se aplica y después se sincroniza y archiva.', flow: ['Explore?', 'Propose', 'Apply', 'Sync?', 'Archive'] },
-    { name: 'GitHub Spec Kit', image: specKit, href: 'https://github.com/github/spec-kit/blob/main/docs/quickstart.md', description: en ? 'A project constitution guides feature specs, plans and tasks; converge checks the result.' : 'Una constitución de proyecto guía las specs, los planes y las tareas; converge comprueba el resultado.', flow: ['Constitution¹', 'Specify', 'Plan', 'Tasks', 'Implement', 'Converge'] },
-    { name: 'Kiro', image: kiro, href: 'https://kiro.dev/docs/specs/feature-specs/', description: en ? 'Feature Specs review requirements, technical design and tasks before executing them. Design-first is also available.' : 'Las Feature Specs revisan requisitos, diseño técnico y tareas antes de ejecutarlas. También existe el flujo que empieza por diseño.', flow: ['Requirements', 'Design', 'Tasks', 'Execute'] },
+    { name: 'OpenSpec', image: openspec, href: 'https://github.com/Fission-AI/OpenSpec/blob/main/docs/workflows.md', description: en ? 'A change proposal carries planning artifacts; apply it, then sync and archive the result.' : 'Una propuesta reúne los artefactos del cambio; se aplica y después se sincroniza y archiva.', flow: ['Explore?', 'Propose', 'Apply', 'Sync?', 'Archive'], details: [
+      ['Investiga el problema sin cambiar archivos; es opcional.', 'Investigate the problem without changing files; optional.'],
+      ['Crea el cambio y sus artefactos de planificación.', 'Create the change and its planning artifacts.'],
+      ['Implementa las tareas y actualiza el plan si hace falta.', 'Implement the tasks and update the plan if needed.'],
+      ['Integra las specs delta en las specs principales; opcional.', 'Merge delta specs into the main specs; optional.'],
+      ['Valida y archiva el cambio completado.', 'Validate and archive the completed change.'],
+    ] },
+    { name: 'GitHub Spec Kit', image: specKit, href: 'https://github.com/github/spec-kit/blob/main/docs/quickstart.md', description: en ? 'A project constitution guides feature specs, plans and tasks; converge checks the result.' : 'Una constitución de proyecto guía las specs, los planes y las tareas; converge comprueba el resultado.', flow: ['Constitution¹', 'Specify', 'Plan', 'Tasks', 'Implement', 'Converge'], details: [
+      ['Fija los principios del proyecto una vez, antes de las features.', 'Set project principles once, before feature work.'],
+      ['Describe qué y por qué, sin elegir todavía la tecnología.', 'Describe what and why, before choosing technology.'],
+      ['Define el diseño técnico a partir de la spec.', 'Produce the technical design from the spec.'],
+      ['Desglosa el diseño en tareas ordenadas por dependencias.', 'Break the design into dependency-ordered tasks.'],
+      ['Ejecuta las tareas y comprueba los criterios de calidad.', 'Execute tasks and check the quality gates.'],
+      ['Contrasta lo construido con la intención inicial.', 'Compare the result with the original intent.'],
+    ] },
+    { name: 'Kiro', image: kiro, href: 'https://kiro.dev/docs/specs/feature-specs/', description: en ? 'Feature Specs review requirements, technical design and tasks before executing them. Design-first is also available.' : 'Las Feature Specs revisan requisitos, diseño técnico y tareas antes de ejecutarlas. También existe el flujo que empieza por diseño.', flow: ['Requirements', 'Design', 'Tasks', 'Execute'], details: [
+      ['Expresa comportamientos comprobables; también puedes empezar por diseño.', 'Capture testable behaviour; design-first is also possible.'],
+      ['Documenta arquitectura, componentes e interacciones.', 'Document architecture, components and interactions.'],
+      ['Convierte el diseño en pasos de implementación revisables.', 'Turn the design into reviewable implementation steps.'],
+      ['Ejecuta las tareas de la feature spec.', 'Execute the feature spec tasks.'],
+    ] },
   ]
   const steps = en ? [
     ['✎', 'Specify', 'Capture the intended outcome, constraints and examples.'],
@@ -125,10 +143,10 @@ export function SddOverview({ language, view = 'general' }: { language: Language
       <p className="section-label">{en ? 'A GENERAL WAY TO WORK' : 'UNA FORMA GENERAL DE TRABAJAR'}</p>
       <div className="sdd-steps">{steps.map(([icon, label], index) => <button type="button" className="sdd-step" data-active={active === index} key={label} aria-pressed={active === index} onMouseEnter={() => setActive(index)} onFocus={() => setActive(index)} onClick={() => setActive(index)}><span className="sdd-icon" aria-hidden="true">{icon}</span><small>{String(index + 1).padStart(2, '0')}</small><strong>{label}</strong></button>)}</div>
       <p className="sdd-message" aria-live="polite"><span>{String(active + 1).padStart(2, '0')} / 04</span>{steps[active][2]}</p>
-    </section> : <section className="sdd-framework-detail" id="sdd-framework-detail" aria-label={frameworks[framework].name}>
+    </section> : <section className="sdd-framework-detail" id="sdd-framework-detail" data-framework={view} aria-label={frameworks[framework].name}>
       <div className="sdd-framework-head"><img src={frameworks[framework].image} alt="" /><span className="section-label">{en ? 'FRAMEWORK WORKFLOW' : 'FLUJO DEL FRAMEWORK'}</span></div>
       <p>{frameworks[framework].description}</p>
-      <ol aria-label={en ? 'Framework workflow' : 'Flujo del framework'}>{frameworks[framework].flow.map(step => <li key={step}>{step}</li>)}</ol>
+      <ol aria-label={en ? 'Framework workflow' : 'Flujo del framework'}>{frameworks[framework].flow.map((step, index) => <li key={step}><button type="button" className="sdd-flow-step" aria-label={`${step}. ${frameworks[framework].details[index][en ? 1 : 0]}`}>{step}<span className="sdd-step-detail" role="tooltip">{frameworks[framework].details[index][en ? 1 : 0]}</span></button></li>)}</ol>
       <a href={frameworks[framework].href} target="_blank" rel="noopener noreferrer">{en ? 'Official workflow ↗' : 'Flujo oficial ↗'}</a><small>{framework === 1 ? (en ? '¹ Once per project' : '¹ Una vez por proyecto') : framework === 0 ? (en ? '? Optional' : '? Opcional') : ''}</small>
     </section>}
   </div>
