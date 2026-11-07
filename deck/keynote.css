@@ -22,7 +22,13 @@ button { font: inherit; cursor: pointer; }
 [data-step="evidence"] { --step-color: var(--stage-evidence); }
 [data-step="delivery"] { --step-color: var(--stage-delivery); }
 [data-step="maintenance"] { --step-color: var(--stage-maintenance); }
-.scene h1 { max-width: 1450px; margin: 0 0 clamp(1.2rem, 3vh, 2.2rem); font-size: clamp(2.8rem, 5.1vw, 6rem); line-height: 1.02; letter-spacing: -.065em; text-wrap: balance; overflow-wrap: anywhere; animation: title-enter .65s ease-out both; }
+.scene h1 { max-width: 1450px; margin: 0 0 clamp(1.2rem, 3vh, 2.2rem); font-size: clamp(2.8rem, 4.6vw, 5.5rem); line-height: 1.02; letter-spacing: -.065em; text-wrap: balance; overflow-wrap: anywhere; animation: title-enter .65s ease-out both; }
+.scene:not([data-scene="cover"]):not([data-scene="engineering-journey"]) { background-image: radial-gradient(circle, #8bace315 .7px, transparent .8px); background-size: 26px 26px; }
+.stage-thread { position: fixed; z-index: 8; top: 3.25vh; left: 5.5vw; display: flex; align-items: center; gap: .45rem; pointer-events: none; }
+.stage-thread::before { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: #4a617f; opacity: .5; }
+.stage-thread span { position: relative; width: 6px; height: 6px; border: 1px solid var(--thread-color); background: var(--lh-canvas); opacity: .55; transform: rotate(45deg); transition: background .35s, opacity .35s, box-shadow .35s; }
+.stage-thread span[data-past="true"] { background: var(--thread-color); opacity: .65; }
+.stage-thread span[data-current="true"] { width: 9px; height: 9px; background: var(--thread-color); opacity: 1; box-shadow: 0 0 14px var(--thread-color); }
 .scene-content { max-width: 1500px; font-size: clamp(1.1rem, 1.65vw, 1.5rem); line-height: 1.45; overflow-wrap: anywhere; animation: content-enter .7s .12s both; }
 .scene-content h2 { margin: 0 0 .55em; font-size: clamp(1.4rem, 2.3vw, 2.5rem); line-height: 1.1; letter-spacing: -.04em; }
 .scene-content h3 { margin: 0 0 .4em; font-size: 1.25rem; }
@@ -97,16 +103,22 @@ button { font: inherit; cursor: pointer; }
 .test-shape p:nth-child(2) { width: 60%; }
 .test-shape.after p:first-child { width: 85%; background: #3971ff; }
 .scene-content:has(.cover-art) { animation: none; }
-.citation-scene { display: grid; gap: 1.2rem; max-width: 1200px; }
-.citation-map { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 5vw; align-items: center; min-height: 43vh; }
-.citation-rule { display: grid; gap: .65rem; max-width: 440px; padding: 1.5rem; border: 2px solid var(--stage-intent); background: #102b2b; }
+.citation-scene { display: grid; gap: 1.2rem; width: 100%; max-width: 1500px; }
+.citation-map { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(4rem, 8vw, 10rem); align-items: center; min-height: 53vh; }
+.citation-rule { position: relative; z-index: 1; display: grid; gap: .8rem; width: 100%; max-width: 600px; padding: clamp(1.5rem, 2.5vw, 3rem); border: 2px solid var(--stage-intent); background: #102b2b; box-shadow: 0 0 45px #00c2a820; }
 .citation-rule small { color: var(--stage-intent); font: 700 .75rem ui-monospace, monospace; letter-spacing: .1em; }
 .citation-rule strong { font: 800 clamp(1.55rem, 2.5vw, 2.8rem) ui-monospace, monospace; }
 .citation-rule span { color: var(--lh-text-muted); }
-[data-scene="define-once-cite-everywhere"][data-stage="0"] .citation-rule { grid-column: 1 / -1; justify-self: center; width: min(100%, 440px); }
-.citation-consumers { display: none; gap: .65rem; }
+[data-scene="define-once-cite-everywhere"][data-stage="0"] .citation-rule { grid-column: 1 / -1; justify-self: center; width: min(100%, 640px); }
+.citation-links { position: absolute; inset: 0; width: 100%; height: 100%; display: none; overflow: visible; pointer-events: none; }
+.citation-links path { fill: none; stroke: var(--stage-intent); stroke-width: .35; stroke-dasharray: 1; stroke-dashoffset: 1; animation: citation-draw .9s ease-out forwards; }
+[data-scene="define-once-cite-everywhere"][data-stage="1"] .citation-links, [data-scene="define-once-cite-everywhere"][data-stage="2"] .citation-links { display: block; }
+[data-scene="define-once-cite-everywhere"][data-stage="2"] .citation-links path { stroke: var(--stage-evidence); }
+.citation-consumers { position: relative; z-index: 1; display: none; gap: .9rem; }
 [data-scene="define-once-cite-everywhere"][data-stage="1"] .citation-consumers, [data-scene="define-once-cite-everywhere"][data-stage="2"] .citation-consumers { display: grid; }
-.citation-consumer { display: grid; grid-template-columns: 2rem 1fr; gap: .1rem .6rem; padding: .65rem 1rem; border: 1px solid var(--stage-intent); background: var(--lh-surface); }
+.citation-consumer { display: grid; grid-template-columns: 2rem 1fr; gap: .15rem .8rem; padding: 1rem 1.25rem; border: 1px solid var(--stage-intent); background: var(--lh-surface); animation: content-enter .55s ease-out both; }
+.citation-consumer:nth-child(2) { animation-delay: .12s; }
+.citation-consumer:nth-child(3) { animation-delay: .24s; }
 .citation-consumer > span { grid-row: span 2; color: var(--stage-intent); }
 .citation-consumer small { color: var(--lh-text-muted); font: .76rem ui-monospace, monospace; }
 [data-scene="define-once-cite-everywhere"][data-stage="2"] .citation-consumer { border-color: var(--stage-evidence); }
@@ -232,14 +244,16 @@ button { font: inherit; cursor: pointer; }
 [data-scene="guardrails"] .scene-grid section li:nth-child(4) { animation-delay: 1.4s; }
 [data-scene="guardrails"] .scene-grid section li:nth-child(5) { animation-delay: 1.6s; }
 [data-scene="guardrails"] .scene-grid section li:nth-child(6) { animation-delay: 1.8s; }
-[data-scene="from-pyramid-to-hourglass"] .scene-grid { grid-template-columns: 1fr; }
-[data-scene="from-pyramid-to-hourglass"] .scene-grid section { display: none; }
-[data-scene="from-pyramid-to-hourglass"][data-stage="0"] .scene-grid section:first-child, [data-scene="from-pyramid-to-hourglass"][data-stage="1"] .scene-grid section:nth-child(2) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, .6fr); gap: 5vw; align-items: center; min-height: 42vh; }
+[data-scene="from-pyramid-to-hourglass"] .scene-grid { position: relative; display: block; min-height: 51vh; }
+[data-scene="from-pyramid-to-hourglass"] .scene-grid section { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, .6fr); gap: 5vw; align-items: center; border-top: 0; opacity: 0; visibility: hidden; transform: translateY(18px) scale(.97); animation: none; transition: opacity .5s, transform .5s, visibility 0s .5s; }
+[data-scene="from-pyramid-to-hourglass"][data-stage="0"] .scene-grid section:first-child, [data-scene="from-pyramid-to-hourglass"][data-stage="1"] .scene-grid section:nth-child(2) { opacity: 1; visibility: visible; transform: none; transition: opacity .5s, transform .5s, visibility 0s; }
 [data-scene="from-pyramid-to-hourglass"] .scene-grid section > div:first-child { max-width: 27ch; }
-[data-scene="from-pyramid-to-hourglass"] .test-shape { width: 100%; max-width: 360px; justify-self: center; }
-[data-scene="from-pyramid-to-hourglass"] .test-shape p { border: 1px solid var(--lh-action); background: var(--lh-surface); }
+[data-scene="from-pyramid-to-hourglass"] .test-shape { width: 100%; max-width: 500px; justify-self: center; gap: .45rem; }
+[data-scene="from-pyramid-to-hourglass"] .test-shape p { border: 1px solid var(--stage-evidence); background: #1e2b38; padding: clamp(.7rem, 1.6vw, 1.5rem); font-weight: 700; }
+[data-scene="from-pyramid-to-hourglass"] .test-shape.before p { background: #5c4412; }
+[data-scene="from-pyramid-to-hourglass"] .test-shape.after p:last-child { width: 85%; }
 [data-scene="from-pyramid-to-hourglass"] .test-shape.after p:first-child { background: #1b4365; }
-@media (max-width: 700px) { [data-scene="from-pyramid-to-hourglass"][data-stage] .scene-grid section { grid-template-columns: 1fr; gap: 1rem; min-height: 0; } }
+@media (max-width: 700px) { [data-scene="from-pyramid-to-hourglass"] .scene-grid { min-height: 57vh; } [data-scene="from-pyramid-to-hourglass"][data-stage] .scene-grid section { grid-template-columns: 1fr; gap: 1rem; } }
 .section-label { margin: 0 0 .8rem; color: var(--scene-accent, var(--lh-action)); font: 700 .75rem ui-monospace, monospace; letter-spacing: .16em; }
 .repo-layout { display: grid; grid-template-columns: minmax(0,.85fr) minmax(0,1.15fr); gap: 4vw; align-items: stretch; }
 .repo-tree { display: flex; flex-direction: column; align-self: start; padding: .8rem 1rem; border: 1px solid var(--lh-border); border-left: 3px solid var(--lh-action); background: #0b1422; font: clamp(.8rem, 1.15vw, 1.1rem)/1.15 ui-monospace, monospace; white-space: nowrap; }
@@ -348,6 +362,7 @@ button { font: inherit; cursor: pointer; }
 @keyframes title-enter { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes content-enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes line-draw { from { stroke-dashoffset: 80; opacity: 0; } to { stroke-dashoffset: 0; opacity: .8; } }
+@keyframes citation-draw { to { stroke-dashoffset: 0; } }
 @keyframes cover-drift { to { transform: scale(1.1) translateX(-2%); } }
 @keyframes journey-trace { to { stroke-dashoffset: -160; } }
 @keyframes journey-arrive { from { opacity: 0; transform: translateY(18px) scale(.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -409,7 +424,9 @@ button { font: inherit; cursor: pointer; }
   .product-cycle-return { margin-top: 1.2rem; padding: .5rem 0; border-top: 2px dashed var(--stage-delivery); flex-direction: row; gap: .8rem; text-align: left; }
   .product-cycle-return-line { display: none; }
   .product-cycle-return-detail { max-width: 22ch; text-align: right; }
-  .citation-map { grid-template-columns: 1fr; gap: 1rem; }
+  .citation-map { grid-template-columns: 1fr; gap: 1rem; min-height: 0; }
+  .citation-links { display: none !important; }
+  .stage-thread { left: 6vw; }
   .citation-rule, [data-scene="define-once-cite-everywhere"][data-stage="0"] .citation-rule { grid-column: auto; justify-self: stretch; }
   .citation-demo .demo-animation { max-height: 40vh; }
   .testing-trace ol { grid-template-columns: 1fr; }

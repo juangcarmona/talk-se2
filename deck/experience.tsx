@@ -26,6 +26,7 @@ function Demo({ language }: { language: string }) {
   }, [])
   return <div className="citation-scene">
     <div className="citation-map" aria-label={en ? 'One accepted product rule cited by three delivery artifacts' : 'Una regla de producto aceptada citada por tres artefactos de entrega'}>
+      <svg className="citation-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M40 50 C48 50 48 34 55 34" pathLength="1" /><path d="M40 50 L55 50" pathLength="1" /><path d="M40 50 C48 50 48 66 55 66" pathLength="1" /></svg>
       <div className="citation-rule"><small>{en ? 'ACCEPTED PRODUCT RULE' : 'REGLA DE PRODUCTO ACEPTADA'}</small><strong>BR-REFUND-001</strong><span>{en ? '30 days from delivery' : '30 días desde la entrega'}</span></div>
       <div className="citation-consumers">{consumers.map(name => <div className="citation-consumer" key={name}><span aria-hidden="true">→</span><strong>{name}</strong><small>cites: BR-REFUND-001</small></div>)}</div>
     </div>

@@ -38,6 +38,22 @@ test('static slide images preload without a cosmetic loading bar', async ({ page
   await expect(page.locator('.hud-track')).toHaveCount(0)
 })
 
+test('the seven-stage thread follows chapters and citations expand in place', async ({ page }) => {
+  await page.goto('/#scene=cover')
+  await expect(page.locator('.stage-thread')).toHaveCount(0)
+  await page.goto('/#scene=define-once-cite-everywhere')
+  await expect(page.locator('.stage-thread span')).toHaveCount(7)
+  await expect(page.locator('.stage-thread span[data-current="true"]')).toHaveCount(1)
+  await expect(page.locator('.citation-links')).toBeHidden()
+  await page.keyboard.press('ArrowRight')
+  await expect(page.locator('.citation-links')).toBeVisible()
+  await expect(page.locator('.citation-links path')).toHaveCount(3)
+  await page.goto('/#scene=from-pyramid-to-hourglass')
+  await expect(page.locator('.stage-thread span[data-current="true"]')).toHaveCount(1)
+  await page.goto('/#scene=what-still-depends-on-us')
+  await expect(page.locator('.stage-thread span[data-past="true"]')).toHaveCount(7)
+})
+
 test('presenter clock waits for the first minute and uses HH:mm', async ({ page }) => {
   await page.clock.install()
   await page.goto('/')
